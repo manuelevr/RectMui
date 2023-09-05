@@ -1,10 +1,11 @@
 import { Button, CssBaseline } from '@mui/material'
-import SignIn from './SignIn'
-import { createBrowserRouter,RouterProvider  } from "react-router-dom" ;
+import SignIn from './routes/SignIn'
+import SignInSide from './routes/SignInMail'
+
 function App() {
 
   return (
-    <SignIn></SignIn>
+    <SignInSide></SignInSide>
   )
 }
 

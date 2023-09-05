@@ -3,27 +3,60 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
-import Link from '@mui/material/Link';
-import Grid from '@mui/material/Grid';
+import { useState } from 'react';
 import Box from '@mui/material/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import InputAdornment from '@mui/material/InputAdornment';
+import  {useAuth}  from '../auth/AuthProvider';
+import { Navigate } from 'react-router-dom';
+import { API_URL } from '../auth/constants';
 
 const defaultTheme = createTheme();
 
 export default function SignIn() {
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const auth = useAuth();
+  if (auth.isAuthenticated) {
+    return<Navigate to='/dashboard'/>
+  }
+  const [emailValue, setEmailValue] = useState(''); // Estado para el valor del correo electrónico
+  const handleSubmit = async  (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
-    });
+    const username = data.get('email')
+    const password = data.get('password')
+    try {
+      const response = await fetch(`${API_URL}/login`, {
+        mode:'no-cors',
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, password }),
+      });
+    if (response.ok) {
+      console.log ("ok")      
+    }else{
+    }
+  } catch (error) {
+    console.log(error);
+  }
+  }
+  const sendPasswordRequest = async (email:string) => {
+    var myHeaders = new Headers();
+    myHeaders.append("Content-Type", "text/plain");
+  
+  
+  
+    fetch(`http://localhost:5000/l/${encodeURIComponent(email)}`,{
+      mode:'no-cors',  
+      method: 'GET',
+      headers: myHeaders,
+      redirect: 'follow'
+    })
+      .then(response => response.text())
+      .then(result => console.log(result))
+      .catch(error => console.log('error', error));
   };
 
   return (
@@ -55,10 +88,12 @@ export default function SignIn() {
               name="email"
               autoComplete="email"
               autoFocus
+              value={emailValue}
+              onChange={(e)=>setEmailValue(e.target.value)}
               InputProps={{
                 endAdornment: (
                   <InputAdornment position="end">
-                    <Button variant="outlined" size="small">
+                   <Button variant="outlined" size="small" onClick={() => sendPasswordRequest(emailValue)}>
                       Obtener
                     </Button>
                   </InputAdornment>

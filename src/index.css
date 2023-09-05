@@ -3,8 +3,6 @@ body {
 
   display: flex; /* Utiliza flexbox para la disposición */
 
-  min-width: 320px; /* Establece el ancho mínimo */
-
   min-height: 100vh; /* Establece la altura mínima */
 
   justify-content: center; /* Centra horizontalmente */
